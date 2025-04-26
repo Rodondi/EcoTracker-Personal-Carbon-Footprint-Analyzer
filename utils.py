@@ -1,5 +1,3 @@
-# utils.py
-
 import random
 
 # List of eco-friendly tips
