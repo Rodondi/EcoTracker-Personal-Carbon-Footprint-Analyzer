@@ -60,7 +60,7 @@ def view_all_logs():
 
     # Add a refresh button
     if st.button("🔄 Refresh Logs"):
-        st.experimental_rerun()
+        st.rerun()
 
     rows = fetch_logs()
 
