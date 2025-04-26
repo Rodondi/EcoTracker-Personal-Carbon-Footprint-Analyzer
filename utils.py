@@ -1,5 +1,8 @@
+# utils.py
+
 import random
 
+# List of eco-friendly tips
 ECO_TIPS = [
     "Use public transportation, bike, or walk whenever possible.",
     "Turn off lights and electronics when not in use to save energy.",
@@ -19,5 +22,5 @@ ECO_TIPS = [
 ]
 
 def get_random_tip():
-    """Return a random eco-friendly tip."""
+    """Return a randomly selected eco tip."""
     return random.choice(ECO_TIPS)
