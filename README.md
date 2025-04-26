@@ -113,7 +113,6 @@ streamlit run streamlit_app.py
 - Requests (API calls)
 - dotenv (for environment variables)
 - Matplotlib (for plotting reports)
-- Faker (optional for testing and generating fake data)
 
 ---
 
