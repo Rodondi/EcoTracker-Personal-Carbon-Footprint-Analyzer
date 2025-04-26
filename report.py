@@ -17,7 +17,7 @@ def generate_report():
 
     # Add a refresh button
     if st.button("🔄 Refresh Report"):
-        st.experimental_rerun()
+        st.rerun()
 
     rows = fetch_logs()
 
