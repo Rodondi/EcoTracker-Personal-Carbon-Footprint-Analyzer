@@ -49,11 +49,9 @@ if choice == "Log Activities":
         st.success("✅ Activity logged successfully!")
 
 elif choice == "View Emission Report":
-    st.header("📈 Emission Trend Report")
     generate_report()
 
 elif choice == "View All Logs":
-    st.header("📝 All Logged Activities")
     view_all_logs()
 
 elif choice == "Get Eco Tip":
