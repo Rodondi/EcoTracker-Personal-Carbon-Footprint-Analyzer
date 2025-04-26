@@ -1,14 +1,25 @@
 import sqlite3
 import matplotlib.pyplot as plt
-import streamlit as st  # ✅ Add this for Streamlit support
+import streamlit as st
 
-def generate_report():
-    """Generate a line chart showing CO2 emissions over time."""
+def fetch_logs():
+    """Fetch all logs freshly from database."""
     conn = sqlite3.connect("data/eco_tracker.db")
     cursor = conn.cursor()
     cursor.execute("SELECT date, transport_km, electricity_kwh, diet FROM logs")
     rows = cursor.fetchall()
     conn.close()
+    return rows
+
+def generate_report():
+    """Generate a line chart showing CO₂ emissions over time."""
+    st.header("📈 Emission Trend Report")
+
+    # Add a refresh button
+    if st.button("🔄 Refresh Report"):
+        st.experimental_rerun()
+
+    rows = fetch_logs()
 
     if not rows:
         st.warning("No data found to generate a report.")
@@ -28,7 +39,7 @@ def generate_report():
         elif diet == "vegan":
             total_emission += 1
 
-        dates.append(date[:10])  # Only take YYYY-MM-DD
+        dates.append(date[:10])
         emissions.append(total_emission)
 
     # Plotting
@@ -40,23 +51,23 @@ def generate_report():
     plt.xticks(rotation=45)
     plt.tight_layout()
 
-    # Streamlit way to show the figure
     st.pyplot(fig)
 
 
 def view_all_logs():
     """Fetch and display all logged activities nicely."""
-    conn = sqlite3.connect("data/eco_tracker.db")
-    cursor = conn.cursor()
-    cursor.execute("SELECT date, transport_km, electricity_kwh, diet FROM logs")
-    rows = cursor.fetchall()
-    conn.close()
+    st.header("📝 All Logged Activities")
+
+    # Add a refresh button
+    if st.button("🔄 Refresh Logs"):
+        st.experimental_rerun()
+
+    rows = fetch_logs()
 
     if not rows:
         st.warning("No logged activities found.")
         return
 
-    # Create a nicer dataframe-like table
-    st.subheader("📝 All Logged Activities")
+    # Nicer dataframe-like display
     for idx, (date, transport_km, electricity_kwh, diet) in enumerate(rows, 1):
         st.text(f"{idx}. Date: {date[:10]} | Distance: {transport_km} km | Electricity: {electricity_kwh} kWh | Diet: {diet}")

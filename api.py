@@ -1,7 +1,10 @@
+# api.py
+
 import requests
 import os
 from dotenv import load_dotenv
 
+# Load environment variables
 load_dotenv()
 API_KEY = os.getenv("CARBON_INTERFACE_API_KEY")
 
@@ -14,49 +17,30 @@ BASE_URL = "https://www.carboninterface.com/api/v1"
 
 def fetch_vehicle_makes():
     """Fetch all vehicle makes."""
-    response = requests.get(f"{BASE_URL}/vehicle_makes", headers=HEADERS)
-    response.raise_for_status()
-    return response.json()
+    try:
+        response = requests.get(f"{BASE_URL}/vehicle_makes", headers=HEADERS)
+        response.raise_for_status()
+        return response.json()  # Return full list
+    except Exception as e:
+        print("Error fetching vehicle makes:", e)
+        return []
 
 def fetch_vehicle_models(make_id):
     """Fetch all models for a specific vehicle make."""
-    response = requests.get(f"{BASE_URL}/vehicle_makes/{make_id}/vehicle_models", headers=HEADERS)
-    response.raise_for_status()
-    return response.json()
-
-def select_vehicle_model():
-    """Let user select a vehicle model and return its model ID."""
-    makes = fetch_vehicle_makes()
-    
-    print("\nAvailable Vehicle Makes:")
-    for idx, make in enumerate(makes[:5]):  # Show only first 5 makes
-        name = make['data']['attributes']['name']
-        print(f"{idx + 1}. {name}")
-
-    choice = int(input("Select a make (1-5): ")) - 1
-    selected_make_id = makes[choice]['data']['id']
-
-    models = fetch_vehicle_models(selected_make_id)
-    
-    print(f"\nAvailable Models:")
-    for idx, model in enumerate(models[:5]):  # Show only first 5 models
-        model_name = model['data']['attributes']['name']
-        model_year = model['data']['attributes']['year']
-        print(f"{idx + 1}. {model_name} ({model_year})")
-
-    model_choice = int(input("Select a model (1-5): ")) - 1
-    selected_model_id = models[model_choice]['data']['id']
-
-    return selected_model_id
-
-def calculate_transport_emission(km):
-    """Use selected model to calculate transport CO₂ emissions."""
     try:
-        model_id = select_vehicle_model()
-        if model_id is None:
-            print("Using fallback estimate.")
-            return round(km * 0.21, 2)
-        
+        response = requests.get(f"{BASE_URL}/vehicle_makes/{make_id}/vehicle_models", headers=HEADERS)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print("Error fetching vehicle models:", e)
+        return []
+
+def calculate_transport_emission(km, model_id=None):
+    """Calculate CO₂ emissions for a distance and optional vehicle model."""
+    if model_id is None:
+        return round(km * 0.21, 2)  # fallback
+
+    try:
         data = {
             "type": "vehicle",
             "distance_unit": "km",
@@ -69,7 +53,7 @@ def calculate_transport_emission(km):
         return round(carbon_kg, 2)
     except Exception as e:
         print("API Error (transport):", e)
-        return round(km * 0.21, 2)
+        return round(km * 0.21, 2)  # fallback
 
 def calculate_energy_emission(kwh):
     """Simple fallback energy emission calculator."""
