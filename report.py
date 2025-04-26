@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 def fetch_logs():
-    """Fetch all logs freshly from database."""
+    """Fetch all logged activities from the database."""
     conn = sqlite3.connect("data/eco_tracker.db")
     cursor = conn.cursor()
     cursor.execute("SELECT date, transport_km, electricity_kwh, diet FROM logs")
@@ -12,17 +12,13 @@ def fetch_logs():
     return rows
 
 def generate_report():
-    """Generate a line chart showing CO₂ emissions over time."""
+    """Display a line chart of CO₂ emissions over time."""
     st.header("📈 Emission Trend Report")
-
-    # Add a refresh button
-    if st.button("🔄 Refresh Report"):
-        st.rerun()
 
     rows = fetch_logs()
 
     if not rows:
-        st.warning("No data found to generate a report.")
+        st.warning("No data available to generate a report.")
         return
 
     dates = []
@@ -30,6 +26,7 @@ def generate_report():
 
     for date, transport_km, electricity_kwh, diet in rows:
         total_emission = transport_km * 0.21 + electricity_kwh * 0.405
+
         if diet == "meat-heavy":
             total_emission += 5
         elif diet == "mixed":
@@ -39,10 +36,9 @@ def generate_report():
         elif diet == "vegan":
             total_emission += 1
 
-        dates.append(date[:10])
+        dates.append(date[:10])  # Only the YYYY-MM-DD part
         emissions.append(total_emission)
 
-    # Plotting
     fig, ax = plt.subplots()
     ax.plot(dates, emissions, marker='o')
     ax.set_title("Carbon Emissions Over Time")
@@ -53,14 +49,9 @@ def generate_report():
 
     st.pyplot(fig)
 
-
 def view_all_logs():
-    """Fetch and display all logged activities nicely."""
+    """Display a list of all logged activities."""
     st.header("📝 All Logged Activities")
-
-    # Add a refresh button
-    if st.button("🔄 Refresh Logs"):
-        st.rerun()
 
     rows = fetch_logs()
 
@@ -68,6 +59,5 @@ def view_all_logs():
         st.warning("No logged activities found.")
         return
 
-    # Nicer dataframe-like display
-    for idx, (date, transport_km, electricity_kwh, diet) in enumerate(rows, 1):
+    for idx, (date, transport_km, electricity_kwh, diet) in enumerate(rows, start=1):
         st.text(f"{idx}. Date: {date[:10]} | Distance: {transport_km} km | Electricity: {electricity_kwh} kWh | Diet: {diet}")
