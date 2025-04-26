@@ -1,0 +1,4 @@
+requests
+Faker
+matplotlib
+python-dotenv

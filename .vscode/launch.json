@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run EcoTracker with eco-env",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/main.py",
+      "console": "integratedTerminal",
+      "python": "C:/Users/Mollean/Documents/Hackthons/eco-env/Scripts/python.exe"
+    }
+  ]
+}
