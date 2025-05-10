@@ -1,6 +1,3 @@
-
-# database.py
-
 import sqlite3
 import os
 
@@ -10,14 +7,14 @@ def setup_database():
     This function ensures the data folder exists, then sets up the logs table.
     """
 
-    # Create data directory if it doesn't exist
+    # Creates data directory if it doesn't exist
     os.makedirs("data", exist_ok=True)
 
-    # Connect to the database (creates it if it doesn't exist)
+    # Connects to the database (creates it if it doesn't exist)
     conn = sqlite3.connect("data/eco_tracker.db")
     cursor = conn.cursor()
 
-    # Create the logs table to store activity entries
+    # Creates the logs table to store activity entries
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS logs (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,6 +25,6 @@ def setup_database():
         )
     """)
 
-    # Commit changes and close connection
+    # Commits changes and closes connection
     conn.commit()
     conn.close()
