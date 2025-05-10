@@ -1,6 +1,3 @@
-
-# utils.py
-
 import random
 
 # A list of eco-friendly tips to encourage sustainable habits
