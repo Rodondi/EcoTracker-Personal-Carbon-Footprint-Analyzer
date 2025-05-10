@@ -1,6 +1,3 @@
-
-# report.py
-
 import sqlite3
 import matplotlib.pyplot as plt
 import streamlit as st
@@ -31,7 +28,7 @@ def generate_report():
     dates = []
     emissions = []
 
-    # Process each log entry and calculate total emissions
+    # Processes each log entry and calculates total emissions
     for date, transport_km, electricity_kwh, diet in rows:
         total_emission = transport_km * 0.21 + electricity_kwh * 0.405
         if diet == "meat-heavy":
@@ -46,7 +43,7 @@ def generate_report():
         dates.append(date[:10])  # Use only the date part
         emissions.append(total_emission)
 
-    # Generate a line chart of emissions over time
+    # Generates a line chart of emissions over time
     fig, ax = plt.subplots()
     ax.plot(dates, emissions, marker='o')
     ax.set_title("Carbon Emissions Over Time")
